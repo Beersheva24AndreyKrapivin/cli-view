@@ -26,7 +26,7 @@ public interface InputOutput {
 				writeLine(errorPrompt + ": " + e.getMessage());
 				running = true;
 			}
-		}while(running);
+		} while (running);
 		return res;
 	}
 
@@ -37,96 +37,56 @@ public interface InputOutput {
 	 * @return Integer number
 	 */
 	default Integer readInt(String prompt, String errorPrompt) {
-		return readObject(prompt, errorPrompt, str -> {
-			try {
-				return Integer.parseInt(str);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-		});
+		return readObject(prompt, errorPrompt, Integer::parseInt);
 	}
 
 	default Long readLong(String prompt, String errorPrompt) {
-		return readObject(prompt, errorPrompt, str -> {
-			try {
-				return Long.parseLong(str);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-		});
+		return readObject(prompt, errorPrompt, Long::parseLong);
 	}
 
 	default Double readDouble(String prompt, String errorPrompt) {
-		return readObject(prompt, errorPrompt, str -> {
-			try {
-				return Double.parseDouble(str);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-		});
+		return readObject(prompt, errorPrompt, Double::parseDouble);
 	}
 
 	default Double readNumberRange(String prompt, String errorPrompt, double min, double max) {
 		return readObject(prompt, errorPrompt, str -> {
-			try {
-				double res = Double.parseDouble(str);
-				if (res < min || res > max) {
-					throw new IllegalArgumentException("Value must be between " + min + " and " + max);
-				}
-				return res;
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
+			double res = Double.parseDouble(str);
+			if (res < min || res > max) {
+				throw new IllegalArgumentException("Value must be between " + min + " and " + max);
 			}
+			return res;
 		});
 	}
 
 	default String readStringPredicate(String prompt, String errorPrompt, Predicate<String> predicate) {
 		return readObject(prompt, errorPrompt, str -> {
-			try {
-				if (!predicate.test(str)) {
-					throw new IllegalArgumentException("The entered string does not match the condition");
-				}
-				return str;
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
+			if (!predicate.test(str)) {
+				throw new IllegalArgumentException("The entered string does not match the condition");
 			}
+			return str;
 		});
 	}
 
 	default String readStringOptions(String prompt, String errorPrompt, HashSet<String> options) {
 		return readObject(prompt, errorPrompt, str -> {
-			try {
-				if (!options.contains(str)) {
-					throw new IllegalArgumentException("The string entered does not match a valid value");
-				}
-				return str;
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
+			if (!options.contains(str)) {
+				throw new IllegalArgumentException("The string entered does not match a valid value");
 			}
-		});	
+			return str;
+		});
 	}
 
 	default LocalDate readIsoDate(String prompt, String errorPrompt) {
-		return readObject(prompt, errorPrompt, str -> {
-			try {
-				return LocalDate.parse(str);
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-		});
+		return readObject(prompt, errorPrompt, LocalDate::parse);
 	}
 
 	default LocalDate readIsoDateRange(String prompt, String errorPrompt, LocalDate from, LocalDate to) {
 		return readObject(prompt, errorPrompt, str -> {
-			try {
-				LocalDate res = LocalDate.parse(str);
-				if (res.isBefore(from) || res.isAfter(to)) {
-					throw new IllegalArgumentException("The date entered must be between " + from + " and " + to);
-				}
-				return res;
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e.getMessage());
+			LocalDate res = LocalDate.parse(str);
+			if (res.isBefore(from) || res.isAfter(to)) {
+				throw new IllegalArgumentException("The date entered must be between " + from + " and " + to);
 			}
+			return res;
 		});
 	}
 }
